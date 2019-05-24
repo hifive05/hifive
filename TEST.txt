@@ -1,3 +1,7 @@
 TEST GIT
+<<<<<<< HEAD
 
 추가
+=======
+냥냥
+>>>>>>> bcbd484c3ec6e1f2c0070605ae723ebfa88c36ed
