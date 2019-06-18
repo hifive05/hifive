@@ -158,18 +158,14 @@ public class memDao implements MemberInterface {
 				reVO.setZIPCODE(rs.getString("zipcode"));
 				reVO.setMEM_PW(rs.getString("mem_pw"));
 				mlist.add(reVO);
-			}			
+			}
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		} finally {
 			dbMgr.freeConnection(con, pstmt,rs);
 		}
-		
-		
 		return mlist;
 	}
-	//public static void main(String args[]) {
-	//		new memDao().memberInsert(null);
-	//	}
+
 
 }
