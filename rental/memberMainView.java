@@ -47,27 +47,30 @@ public class memberMainView extends JFrame implements ActionListener, MouseListe
 	JMenuItem jmi_fback = new JMenuItem("백업");
 	JMenuItem jmi_fexit = new JMenuItem("나가기");
 	
+	JMenu jm_home = new JMenu("HOME");
 	JMenu jm_mem = new JMenu("회원");
-	JMenuItem jmi_mins = new JMenuItem("회원등록");
-	JMenuItem jmi_mupd = new JMenuItem("회원수정");
-	JMenuItem jmi_mdel = new JMenuItem("회원삭제");
-	
 	JMenu jm_rent = new JMenu("대여");
-	JMenuItem jmi_rins = new JMenuItem("대여등록");
-	JMenuItem jmi_rupd = new JMenuItem("대여수정");
-	JMenuItem jmi_rdel = new JMenuItem("대여삭제");
-	
 	JMenu jm_pro = new JMenu("상품");
-	JMenuItem jmi_pdam = new JMenuItem("파손");
-	JMenuItem jmi_pas = new JMenuItem("A/S");
-	JMenuItem jmi_pcha = new JMenuItem("변경");
-	JMenuItem jmi_pplus = new JMenuItem("추가");
-	JMenuItem jmi_pdel = new JMenuItem("삭제");
 	
-	JMenu jm_sales = new JMenu("매출");
-	JMenuItem jmi_sd = new JMenuItem("일별매출");
-	JMenuItem jmi_sm = new JMenuItem("월별매출");
-	JMenuItem jmi_sy = new JMenuItem("년별매출");
+	
+	/*
+	 *  JMenuItem jmi_mins = new JMenuItem("회원등록");
+	 * JMenuItem jmi_mupd = new JMenuItem("회원수정"); JMenuItem jmi_mdel = new
+	 * JMenuItem("회원삭제");
+	 * 
+	 *  JMenuItem jmi_rins = new JMenuItem("대여등록");
+	 * JMenuItem jmi_rupd = new JMenuItem("대여수정"); JMenuItem jmi_rdel = new
+	 * JMenuItem("대여삭제");
+	 * 
+	 *  JMenuItem jmi_pdam = new JMenuItem("파손");
+	 * JMenuItem jmi_pas = new JMenuItem("A/S"); JMenuItem jmi_pcha = new
+	 * JMenuItem("변경"); JMenuItem jmi_pplus = new JMenuItem("추가"); JMenuItem
+	 * jmi_pdel = new JMenuItem("삭제");
+	 * 
+	 * JMenu jm_sales = new JMenu("매출"); JMenuItem jmi_sd = new JMenuItem("일별매출");
+	 * JMenuItem jmi_sm = new JMenuItem("월별매출"); JMenuItem jmi_sy = new
+	 * JMenuItem("년별매출");
+	 */
 //////////////////////////////////////////메뉴바끝////////////////////////////////////////
 /////////////////////////////버튼추가/////////////////////////////////////////
 	JPanel jp_north = new JPanel();
@@ -78,14 +81,14 @@ public class memberMainView extends JFrame implements ActionListener, MouseListe
 	JButton jbtn_upd = new JButton("수정");
 	JButton jbtn_del = new JButton("삭제");
 	JButton jbtn_all = new JButton("전체조회");
-	JButton jbtn_mem = new JButton("회원");
-	JButton jbtn_rent = new JButton("대여");
-	JButton jbtn_pro = new JButton("상품");
-	JButton jbtn_home = new JButton("HOME");
+	//JButton jbtn_mem = new JButton("회원");
+	//JButton jbtn_rent = new JButton("대여");
+	//JButton jbtn_pro = new JButton("상품");
+	//JButton jbtn_home = new JButton("HOME");
 	String cols[] = {"회원명","회원ID","주소","전화번호","가입일자","비밀번호"};
 	//////////////////////////////버튼추가끝///////////////////////////////////////////
 //////////////////////검색기 추가 시작//////////////////////////////////////////////
-String searchLabel[] = {"회원명","회원ID","주소","전화번호","가입일자","비밀번호"};
+String searchLabel[] = {"전체","회원명","회원ID","주소","전화번호","가입일자","비밀번호"};
 JComboBox jcb_search = new JComboBox(searchLabel);
 JTextField jtf_keyword = new JTextField("검색할 키워드를 입력하세요.",50);	
 //////////////////////검색기 추가 끝//////////////////////////////////////////////
@@ -161,17 +164,18 @@ JTextField jtf_keyword = new JTextField("검색할 키워드를 입력하세요.
 		this.setTitle("회원관리");
 		
 		jp_north.setLayout(new GridLayout(2,1));
-		jp_north_second.setLayout(new FlowLayout(FlowLayout.LEFT));
-		
-		jp_north_second.add(jcb_search);
-		jp_north_second.add(jtf_keyword);
-		jp_north_second.add(jbtn_sel);
 		jp_north_first.setLayout(new FlowLayout(FlowLayout.LEFT));
 		
-		jp_north_first.add(jbtn_ins);
-		jp_north_first.add(jbtn_upd);
-		jp_north_first.add(jbtn_del);
-		jp_north_first.add(jbtn_all);
+		jp_north_first.add(jcb_search);
+		jp_north_first.add(jtf_keyword);
+		jp_north_first.add(jbtn_sel);
+		
+		jp_north_second.setLayout(new FlowLayout(FlowLayout.LEFT));
+		
+		jp_north_second.add(jbtn_ins);
+		jp_north_second.add(jbtn_upd);
+		jp_north_second.add(jbtn_del);
+		jp_north_second.add(jbtn_all);
 		
 //////////////////////////////////////////메뉴바시작////////////////////////////////////////		
 		jm_file.add(jmi_fsave);
@@ -181,18 +185,17 @@ JTextField jtf_keyword = new JTextField("검색할 키워드를 입력하세요.
 		jm_file.add(jmi_fexit);
 		jmb_mem.add(jm_file);
 		
-		jmb_mem.add(jbtn_home);
-		jmb_mem.add(jbtn_mem);
-		jmb_mem.add(jbtn_rent);
-		jmb_mem.add(jbtn_pro);
+		jmb_mem.add(jm_home);
+		jmb_mem.add(jm_mem);
+		jmb_mem.add(jm_rent);
+		jmb_mem.add(jm_pro);
 		this.setJMenuBar(jmb_mem);
 //////////////////////////////////////////메뉴바끝////////////////////////////////////////
 		
-		jp_north.add(jp_north_second);
 		jp_north.add(jp_north_first);
+		jp_north.add(jp_north_second);
 		this.add("North",jp_north);
 		this.add("Center",jsp_mem);
-		//this.add("center",jsp_mem);
 		this.setSize(850, 500);
 		this.setVisible(true);
 		refreshData();
@@ -200,14 +203,14 @@ JTextField jtf_keyword = new JTextField("검색할 키워드를 입력하세요.
 
 /////////////////////////////////[[initDispaly]]/////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////	
-	//입력
+	//////////////입력
 	protected void insertActionPerforemd(ActionEvent e) {
 		String label = e.getActionCommand(); 
 		sView = null;
 		sView = new memberSubView();
 		sView.set(null,label,mView,true);
 	}
-	//수정
+	/////////////수정
 	protected void updateActionPerforemd(ActionEvent e) {
 		String label = e.getActionCommand(); 
 		int index = jt_mem.getSelectedRow();
@@ -231,9 +234,8 @@ JTextField jtf_keyword = new JTextField("검색할 키워드를 입력하세요.
 				// TODO: handle exception
 			}
 		}
-		
 	}
-	//삭제
+	//////////삭제
 	protected void deleteActionPerforemd(ActionEvent e) {
 		String label = e.getActionCommand(); 
 		int index = jt_mem.getSelectedRow();
@@ -265,7 +267,7 @@ JTextField jtf_keyword = new JTextField("검색할 키워드를 입력하세요.
 			}
 		}
 	}
-	//전체조회
+	////////전체조회
 	protected void allActionPerforemd(ActionEvent e) {
 		refreshData();
 }
@@ -285,10 +287,10 @@ JTextField jtf_keyword = new JTextField("검색할 키워드를 입력하세요.
 				JOptionPane.showMessageDialog(this, "새로 입력하세요.");
 				return;
 			}
-		//	getMemList(keyword);
+			//getMemList(keyword);
 		}
 		else if(e.getSource()==jtf_keyword) {
-		//	getMemList(keyword);
+			//getMemList(keyword);
 		}
 	}
 		
