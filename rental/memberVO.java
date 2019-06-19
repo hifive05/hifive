@@ -10,6 +10,9 @@ public class memberVO {
 	private String MEM_PW     =null;
 	private String command    =null;
 	private int    status     = -1;
+	private String combobox    =null;
+	private String keyword    =null;
+	
 	
 	public String getMEM_ID() {
 		return MEM_ID;
@@ -65,5 +68,18 @@ public class memberVO {
 	public void setStatus(int status) {
 		this.status = status;
 	}
+	public String getCombobox() {
+		return combobox;
+	}
+	public void setCombobox(String combobox) {
+		this.combobox = combobox;
+	}
+	public String getKeyword() {
+		return keyword;
+	}
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
+	}
+
 
 }

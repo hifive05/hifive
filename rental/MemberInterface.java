@@ -8,5 +8,6 @@ public interface MemberInterface {
 	public memberVO memberUpdate(memberVO paVO);//수정
 	public memberVO memberDelete(memberVO paVO);//삭제
 	public List<memberVO> getmemberAll();//전체조회
+	public List<memberVO> getmemberSearch(memberVO paVO);//검색
 
 }

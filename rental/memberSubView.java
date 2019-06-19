@@ -249,7 +249,7 @@ public class memberSubView extends JDialog implements ActionListener {
 					memberVO reVO = mCtrl.send(paVO);
 					if (reVO != null) {
 						if (reVO.getStatus() == 1) {
-							JOptionPane.showMessageDialog(mView, "성공!!!!");
+							//JOptionPane.showMessageDialog(mView, "성공!!!!");
 							this.dispose();
 							mView.refreshData();
 							

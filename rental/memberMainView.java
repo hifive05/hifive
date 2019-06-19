@@ -5,6 +5,8 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.Connection;
@@ -34,7 +36,7 @@ import com.address.AddressBook;
 import com.address.SubBook;
 import com.rent.RentOracleServer;
 
-public class memberMainView extends JFrame implements ActionListener, MouseListener{
+public class memberMainView extends JFrame{
 //선언부
 	memberSubView sView = new memberSubView();
 	static memberMainView mView = null;
@@ -127,27 +129,61 @@ JTextField jtf_keyword = new JTextField("검색할 키워드를 입력하세요.
 	}
 //화면처리구현
 	public void initDisplay() {
-		jtf_keyword.addMouseListener(this);
+		jtf_keyword.addKeyListener(new KeyListener() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+			}
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(e.getKeyCode()==10) {
+				enterActionPerformed(e);
+			}}
+			@Override
+			public void keyTyped(KeyEvent e) {
+			}
+			
+		});
+		jtf_keyword.addMouseListener(new MouseListener() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				clickActionPerformed(arg0);
+			}
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+			}
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+			}
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+			}
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+			}
+		});
 		jbtn_ins.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				insertActionPerforemd(e);}	});
+				insertActionPerformed(e);}	});
 		
 		jbtn_upd.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				updateActionPerforemd(e);}	});
+				updateActionPerformed(e);}	});
 		
 		jbtn_del.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				deleteActionPerforemd(e);}	});
+				deleteActionPerformed(e);}	});
 		jbtn_all.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				allActionPerforemd(e);}		});
+				allActionPerformed(e);}		});
 		
-		jbtn_sel.addActionListener(this);
+		jbtn_sel.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				searchActionPerformed(e);}	});
 		//테이블 헤더 변경 금지하기
 		jt_mem.getTableHeader().setReorderingAllowed(false);
 		//테이블 컬럼 폭지정하기
@@ -191,7 +227,6 @@ JTextField jtf_keyword = new JTextField("검색할 키워드를 입력하세요.
 		jmb_mem.add(jm_pro);
 		this.setJMenuBar(jmb_mem);
 //////////////////////////////////////////메뉴바끝////////////////////////////////////////
-		
 		jp_north.add(jp_north_first);
 		jp_north.add(jp_north_second);
 		this.add("North",jp_north);
@@ -201,17 +236,90 @@ JTextField jtf_keyword = new JTextField("검색할 키워드를 입력하세요.
 		refreshData();
 	}
 
-/////////////////////////////////[[initDispaly]]/////////////////////////////////////////
+	protected void clickActionPerformed(MouseEvent arg0) {
+		 	jtf_keyword.setText(null);
+}
+	/////////////////////////////////[[initDispaly 끝]]/////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////	
+	protected void enterActionPerformed(KeyEvent e) {
+		String keyword = jtf_keyword.getText();
+		String comboboxlabel = (String)jcb_search.getSelectedItem();
+			if("검색할 키워드를 입력하세요.".equals(jtf_keyword.getText())) {
+				JOptionPane.showMessageDialog(this, "새로 입력하세요.");
+				return;
+			}else {
+				try {
+					memberVO paVO = new memberVO();
+					paVO.setCombobox(comboboxlabel);
+					paVO.setKeyword(keyword);
+					memberCtrl mCtrl = new memberCtrl();
+					List<memberVO> mlist = mCtrl.send("search",paVO);
+					while(dtm_mem.getRowCount()>0) {
+						dtm_mem.removeRow(0);
+					}
+					for(int i=0;i<mlist.size();i++) {
+						memberVO reVO = mlist.get(i);
+						Vector rowData = new Vector();
+						rowData.add(0, reVO.getNAME());
+						rowData.add(1, reVO.getMEM_ID());
+						rowData.add(2, reVO.getADDRESS());
+						rowData.add(3, reVO.getPHO_NO());
+						rowData.add(4, reVO.getJOIN_DATE());
+						rowData.add(5, reVO.getMEM_PW());
+						dtm_mem.addRow(rowData);
+					}
+				} catch (Exception e2) {
+					System.out.println(e2.toString());
+				}
+			}
+			
+		}		
+	
+	/////////////검색
+	protected void searchActionPerformed(ActionEvent e) {
+		String label = e.getActionCommand(); 
+		String keyword = jtf_keyword.getText();
+		String comboboxlabel = (String)jcb_search.getSelectedItem();
+		if("검색".equals(label)) {
+			if("검색할 키워드를 입력하세요.".equals(jtf_keyword.getText())) {
+				JOptionPane.showMessageDialog(this, "새로 입력하세요.");
+				return;
+			}else {
+				try {
+					memberVO paVO = new memberVO();
+					paVO.setCombobox(comboboxlabel);
+					paVO.setKeyword(keyword);
+					memberCtrl mCtrl = new memberCtrl();
+					List<memberVO> mlist = mCtrl.send("search",paVO);
+					while(dtm_mem.getRowCount()>0) {
+						dtm_mem.removeRow(0);
+					}
+					for(int i=0;i<mlist.size();i++) {
+						memberVO reVO = mlist.get(i);
+						Vector rowData = new Vector();
+						rowData.add(0, reVO.getNAME());
+						rowData.add(1, reVO.getMEM_ID());
+						rowData.add(2, reVO.getADDRESS());
+						rowData.add(3, reVO.getPHO_NO());
+						rowData.add(4, reVO.getJOIN_DATE());
+						rowData.add(5, reVO.getMEM_PW());
+						dtm_mem.addRow(rowData);
+					}
+				} catch (Exception e2) {
+					System.out.println(e2.toString());
+				}
+			}
+		}
+	}
 	//////////////입력
-	protected void insertActionPerforemd(ActionEvent e) {
+	protected void insertActionPerformed(ActionEvent e) {
 		String label = e.getActionCommand(); 
 		sView = null;
 		sView = new memberSubView();
 		sView.set(null,label,mView,true);
 	}
 	/////////////수정
-	protected void updateActionPerforemd(ActionEvent e) {
+	protected void updateActionPerformed(ActionEvent e) {
 		String label = e.getActionCommand(); 
 		int index = jt_mem.getSelectedRow();
 		if(index<0) {
@@ -236,7 +344,7 @@ JTextField jtf_keyword = new JTextField("검색할 키워드를 입력하세요.
 		}
 	}
 	//////////삭제
-	protected void deleteActionPerforemd(ActionEvent e) {
+	protected void deleteActionPerformed(ActionEvent e) {
 		String label = e.getActionCommand(); 
 		int index = jt_mem.getSelectedRow();
 		if(index<0) {
@@ -268,7 +376,7 @@ JTextField jtf_keyword = new JTextField("검색할 키워드를 입력하세요.
 		}
 	}
 	////////전체조회
-	protected void allActionPerforemd(ActionEvent e) {
+	protected void allActionPerformed(ActionEvent e) {
 		refreshData();
 }
 /////////////////////////////////////////////////////////////////////////////////////////////	
@@ -277,37 +385,5 @@ JTextField jtf_keyword = new JTextField("검색할 키워드를 입력하세요.
 			mView = new memberMainView();
 		}
 		mView.initDisplay();
-	}
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		String keyword = jtf_keyword.getText();
-		if(e.getSource()==jbtn_sel) {
-			if("검색할 키워드를 입력하세요.".equals(jtf_keyword.getText())) {
-				JOptionPane.showMessageDialog(this, "새로 입력하세요.");
-				return;
-			}
-			//getMemList(keyword);
-		}
-		else if(e.getSource()==jtf_keyword) {
-			//getMemList(keyword);
-		}
-	}
-		
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		jtf_keyword.setText(null);
-		}
-	@Override
-	public void mouseEntered(MouseEvent e) {
-	}
-	@Override
-	public void mouseExited(MouseEvent e) {
-	}
-	@Override
-	public void mousePressed(MouseEvent e) {
-	}
-	@Override
-	public void mouseReleased(MouseEvent e) {
 	}
 }
