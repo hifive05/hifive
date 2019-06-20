@@ -9,7 +9,10 @@ public class p_VO {
 	private String model_no = null;//
 	private String command = null;
 	private int    status  = -1;
-
+	private String inbrand = null;
+	private String incategory = null;
+	private String search = null;
+	private String keyword = null;
 	public String getPro_cost() {
 		return pro_cost;
 	}
@@ -58,6 +61,30 @@ public class p_VO {
 	public String getCommand() {
 		// TODO Auto-generated method stub
 		return command;
+	}
+	public String getInbrand() {
+		return inbrand;
+	}
+	public void setInbrand(String inbrand) {
+		this.inbrand = inbrand;
+	}
+	public String getIncategory() {
+		return incategory;
+	}
+	public void setIncategory(String incategory) {
+		this.incategory = incategory;
+	}
+	public String getSearch() {
+		return search;
+	}
+	public void setSearch(String search) {
+		this.search = search;
+	}
+	public String getKeyword() {
+		return keyword;
+	}
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
 	}
 
 }

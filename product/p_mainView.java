@@ -6,13 +6,10 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.List;
 import java.util.Vector;
 
@@ -30,23 +27,18 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
-import com.address.AddressBook;
-import com.address.AddressBookCtrl;
-import com.address.AddressVO;
-import com.address.SubBook;
-import com.rent2.P_orclServer;
-
 public class p_mainView extends JFrame{
+	p_insertsub insub = null;
 	p_sub psub = null;
 	static p_mainView pmain = null;
 	JMenuBar jmd_pro = new JMenuBar();	
 	JMenu jm_move = new JMenu("이동");
-	JButton jbtn_mem = new JButton("회원");
-	JButton jbtn_rent = new JButton("대여");
-	JButton jbtn_pro = new JButton("상품");
-	JButton jbtn_home = new JButton("HOME");
+	JMenu jbtn_mem = new JMenu("회원");
+	JMenu jbtn_rent = new JMenu("대여");
+	JMenu jbtn_pro = new JMenu("상품");
+	JMenu jbtn_home = new JMenu("HOME");
 	
-	String searchLabel[]= {"브랜드","상품군","상품코드"};
+	String searchLabel[]= {"전체","브랜드","상품군","상품코드"};
 	JComboBox jcb_search = new JComboBox(searchLabel);
 	JTextField jtf_keyword = new JTextField("검색할 키워드를 입력하세요",14);
 	JButton jbtn_searchbutton = new JButton("검색");
@@ -73,6 +65,66 @@ public class p_mainView extends JFrame{
 
 	public void initDisplay() {
 		psub = new p_sub();
+		jtf_keyword.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(e.getKeyCode()==10) {
+					enterActionPerformed(e);
+				}
+			}
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		jtf_keyword.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				clickActionPerformed(e);
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		jbtn_searchbutton.addActionListener(new ActionListener() {//구현체 클래스가 필요하면 그 안에서 구현해줄 수 있다.
+		                                        	@Override
+		                                        	public void actionPerformed(ActionEvent e) {
+		                                        		searchActionPerformed(e);
+		                                        	}			
+		                                        });
 		jbtn_ins.addActionListener(new ActionListener() {//구현체 클래스가 필요하면 그 안에서 구현해줄 수 있다.
 		                                        	@Override
 		                                        	public void actionPerformed(ActionEvent e) {
@@ -91,7 +143,7 @@ public class p_mainView extends JFrame{
 		                                        		deleteActionPerformed(e);
 		                                        	}
 		                                        });
-		jbtn_searchbutton.addActionListener(new ActionListener() {//구현체 클래스가 필요하면 그 안에서 구현해줄 수 있다.
+		jbtn_det.addActionListener(new ActionListener() {//구현체 클래스가 필요하면 그 안에서 구현해줄 수 있다.
 		                                        	@Override
 		                                        	public void actionPerformed(ActionEvent e) {
 		                                        		detailActionPerformed(e);
@@ -114,6 +166,8 @@ public class p_mainView extends JFrame{
 		jp_north_first.add(jbtn_upd);
 		jp_north_first.add(jbtn_all);
 		jp_north_first.add(jbtn_del);
+		jp_north_first.add(jbtn_det);
+		
 	
 		
 		JF_pro.setTitle("상품관리 시스템");
@@ -147,13 +201,84 @@ public class p_mainView extends JFrame{
 		refreshData();
 	}
 
-
+//////////////////////////////////////////////////클릭시 검색창 텍스트 없애기///////////////////////////////////
+	protected void clickActionPerformed(MouseEvent e) {
+		jtf_keyword.setText(null);
+	}
+/////////////////////////////////////////////////검색어 입력후 엔터시 검색하기//////////////////////////
+	protected void enterActionPerformed(KeyEvent e) {
+		String search =	(String)jcb_search.getSelectedItem();
+		String keyword = jtf_keyword.getText();
+			if("검색할 키워드를 입력하세요".equals(jtf_keyword.getText())) {
+				JOptionPane.showMessageDialog(this, "새로 입력하세요.");
+				return;
+			}else {
+				try {
+					p_VO paVO = new p_VO();
+					paVO.setSearch(search);
+					paVO.setKeyword(keyword);
+					p_ctrl pctrl = new p_ctrl();
+					List<p_VO> list = pctrl.search("search",paVO);
+					while(dtm_pro.getRowCount()>0) {
+						dtm_pro.removeRow(0);
+					}
+					for(int i=0;i<list.size();i++) {
+						p_VO raVO=list.get(i);
+						Vector rowData = new Vector();
+						rowData.add(0,raVO.getPro_cost());
+						rowData.add(1,raVO.getPro_quan());
+						rowData.add(2,raVO.getBrand());
+						rowData.add(3,raVO.getPro_code());
+						rowData.add(4,raVO.getCategory());
+						rowData.add(5,raVO.getModel_no());
+						dtm_pro.addRow(rowData);
+					}
+				} catch (Exception e1) {
+					System.out.println(e1.toString());
+					}
+			}
+	}
+////////////////////////////////////////////검색라벨 인식후 검색//////////////////////////////////
+	protected void searchActionPerformed(ActionEvent e) {
+		String laber = e.getActionCommand();
+		String search =	(String)jcb_search.getSelectedItem();
+		String keyword = jtf_keyword.getText();
+		if("검색".equals(laber)) {if("검색할 키워드를 입력하세요".equals(jtf_keyword.getText())) {
+			JOptionPane.showMessageDialog(this, "새로 입력하세요.");
+			return;
+		}else {
+			p_VO paVO = new p_VO();
+			paVO.setSearch(search);
+			paVO.setKeyword(keyword);
+			p_ctrl pctrl = new p_ctrl();
+			List<p_VO> list = pctrl.search("search",paVO);
+			while(dtm_pro.getRowCount()>0) {
+				dtm_pro.removeRow(0);
+			}
+			for(int i=0;i<list.size();i++) {
+				p_VO raVO=list.get(i);
+				//Vector을 생성한 이유는 DB에서 꺼낸 값을 행 단위로 dtm_address에
+				//추가 할수 있는 addRow(Vector|Object[])라는 메소드에 파라미터로 넣기 위함이다
+				Vector rowData = new Vector();
+				rowData.add(0,raVO.getPro_cost());
+				rowData.add(1,raVO.getPro_quan());
+				rowData.add(2,raVO.getBrand());
+				rowData.add(3,raVO.getPro_code());
+				rowData.add(4,raVO.getCategory());
+				rowData.add(5,raVO.getModel_no());
+				dtm_pro.addRow(rowData);
+			}
+			}
+	}
+	}
+	//////////////////////////////입력창 액션 서브 insertsub로 넘어감////////////////////
 	protected void insertActionPerformed(ActionEvent e) {
 		String label = e.getActionCommand();
-		psub = null;
-		psub = new p_sub();
-		psub.set(null,label,pmain,true);
+		insub = null;
+		insub = new p_insertsub();
+		insub.set(null,label,pmain,true);
 	}
+	///////////////////////////삭제하기////////////////////////////
 	protected void deleteActionPerformed(ActionEvent e) {
 		String label = e.getActionCommand();
 		int index = jt_pro.getSelectedRow();
@@ -174,7 +299,7 @@ public class p_mainView extends JFrame{
 					paVO.setPro_code(u_code);
 					raVO = aCtrl.send(paVO);
 					System.out.println("삭제");
-				}
+				} 
 			}
 			if(raVO.getStatus()==1) {//삭제 성공
 				refreshData();
@@ -191,7 +316,7 @@ public class p_mainView extends JFrame{
 		}//////////end of if
 	}//////////////end of deleteAction
 	
-
+////////////////////////////수정하기/////////////////////////////
 	protected void updataActionPerformed(ActionEvent e) {
 		String label = e.getActionCommand();
 		//이벤트를 어디에 걸지? JTable(폼,이벤트) DefaultTableModel(값을 저장)
@@ -221,6 +346,7 @@ public class p_mainView extends JFrame{
 		}
 
 	}
+	/////////////////////////상세정보//////////////////////////////
 	protected void detailActionPerformed(ActionEvent e) {
 		String label = e.getActionCommand();
 		//이벤트를 어디에 걸지? JTable(폼,이벤트) DefaultTableModel(값을 저장)
@@ -252,12 +378,13 @@ public class p_mainView extends JFrame{
 		
 		
 	}
+	///////////////////////////기본 화면 전체 조회////////////////////////////
 	protected void allActionPerformed(ActionEvent e) {
 		String label = e.getActionCommand();
 		refreshData();
 	}
 
-	
+	///////////////////////////전체조회 알고리즘///////////////////////////
 	public void refreshData() {
 		//이미 테이블에 있던 데이터는 삭제한다.
 		while(dtm_pro.getRowCount()>0) {
@@ -265,7 +392,6 @@ public class p_mainView extends JFrame{
 		}		
 		p_ctrl aCtrl = new p_ctrl();
 		List<p_VO> list = aCtrl.send("select");
-		System.out.println("3");
 		if((list==null)||(list.size()==0)) {
 			JOptionPane.showMessageDialog(this, "데이터가 없습니다");
 		}

@@ -12,6 +12,10 @@ public interface p_Interface {
 		//삭제처리를 위한 추상 메소드 선언
 		public p_VO proDelete(p_VO paVO);
 		//전체조회 처리를 위한 추상메소드 선언
+		public p_VO proSearch(p_VO paVO);
 		public List<p_VO> getpro();
+		public List<p_VO> getser(p_VO paVO);
+		
+
 }
 

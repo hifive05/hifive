@@ -7,7 +7,6 @@ public class p_RegisterLogic {
 		// TODO Auto-generated method stub
 		p_VO raVO = new p_VO();
 		raVO = aDao.proInsert(paVO);
-		System.out.println("reg");
 		return raVO;
 	}
 
